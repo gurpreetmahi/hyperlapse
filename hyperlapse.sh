@@ -13,11 +13,11 @@ update_imagesequence () {
 
 is_day (){
 
-	day_start_time=$(date +%s -d $(date +'%a %e %b 10:30:00 IST %Y'))
-	day_end_time=$(date +%s -d $(date +'%a %e %b 19:30:00 IST %Y'))
+	day_start_time=$(date +%s -d '05:30:00')
+	day_end_time=$(date +%s -d '19:30:00')
 	current_time=$(date +%s)
 
-	if [ $current_time -ge day_start_time -a $current_time -le day_end_time ]
+	if [ $current_time -ge $day_start_time -a $current_time -le $day_end_time ]
 	then
 		return 0
 	else
@@ -31,9 +31,16 @@ do
 	if is_day
 	then
 		update_imagesequence
-		echo $imagesequence
-		echo $(date +'%H %M')
-		echo $is_day
+		pwd
+		if [ -d "images/%(date +%d%m%y)" ]; then
+			echo exists
+		else
+			echo "creating directory"
+			mkdir -p images/$(date +%d%m%y)	
+		fi
+
+		fswebcam --no-banner -r 1920x1080  images/$(date +%d%m%y)/$imagesequence.jpg		
+		echo "Taking picture"
 	else
 		echo "Waiting for day"
 	fi
